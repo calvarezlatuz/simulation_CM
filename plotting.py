@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from numpy import ceil, mod
 
 
 #plotting code of the kinetics figure
@@ -121,7 +122,7 @@ def plot_hurwitz_test(e_list,u_list,lambda_J_matrix,u_c_list):
             y=u_list, colorscale='Plasma',
             colorbar={"titleside":'bottom',  
                     "titlefont":dict(size=14, family='Times New Roman'),
-                    "x":0.76,"y":0.53}))
+                    "x":0.85,"y":0.53}))
 
     fig.add_trace(go.Scatter(
         mode='lines', 
@@ -137,7 +138,7 @@ def plot_hurwitz_test(e_list,u_list,lambda_J_matrix,u_c_list):
                     margin=dict(l=0,r=0,b=0,t=0), 
                     legend2={
                         "y": -0.1,
-                        "x": 0.86
+                        "x": 0.95
                         }
                     )
     return fig
@@ -145,12 +146,16 @@ def plot_hurwitz_test(e_list,u_list,lambda_J_matrix,u_c_list):
 
 # plotting code for simulation on trajectories on a set of initial conditions
 def plot_multiple_sim(n, N_IC, T_f, y_star, t, graph):
-    row_column = {0:(1,2),1:(1,3),2:(2,1),3:(2,2),4:(2,3),5:(1,1)}
-    fig = make_subplots(rows=2, cols=3)
+    cols = 2 if n<5 else 3
+    rows = int(ceil((n+1)/cols))
+    fig = make_subplots(rows=rows, cols=cols)
 
+    r = 1
+    count_col = 2
     for i in range(n+1):
         graph_i = graph[i]
-        r,c = row_column[i]
+        r,c = (int(ceil((i+2)/cols)),count_col) if i<n else (1,1)
+        count_col = count_col+1 if (count_col<cols) else 1
         for j in range(N_IC):
             y = graph_i[j]
             fig.add_trace(go.Scatter(x=t,y=y,showlegend=False,mode="lines", line_width=0.5), row=r,col=c)
@@ -163,18 +168,22 @@ def plot_multiple_sim(n, N_IC, T_f, y_star, t, graph):
         s_off = 0 if(i<n) else 5
         fig.update_yaxes(title_text=title_y, row=r, col=c, title_standoff = s_off)
 
-    fig.update_layout(width=900, height=450,margin=dict(l=20,r=20,b=20,t=20))
+    fig.update_layout(width=700, height=450,margin=dict(l=20,r=20,b=20,t=20))
 
     return fig
 
 
 # plotting code for simulation on trajectories on two different sets of initial conditions
 def plot_multiple_sim_delta(n, N_IC, T_f, y_star, t, graph1, graph2):
-    row_column = {0:(1,2),1:(1,3),2:(2,1),3:(2,2),4:(2,3),5:(1,1)}
-    fig = make_subplots(rows=2, cols=3)
+    cols = 2 if n<5 else 3
+    rows = int(ceil((n+1)/cols))
+    fig = make_subplots(rows=rows, cols=cols)
 
+    r = 1
+    count_col = 2
     for i in range(n+1):
-        r,c = row_column[i]
+        r,c = (int(ceil((i+2)/cols)),count_col) if i<n else (1,1)
+        count_col = count_col+1 if (count_col<cols) else 1
 
         graph_i = graph1[i]
         color = "magenta"
@@ -198,5 +207,5 @@ def plot_multiple_sim_delta(n, N_IC, T_f, y_star, t, graph1, graph2):
         title_y = r"$x_{i}$".format(i=i+1) if(i<n) else r"$s$"
         s_off = 0 if(i<n) else 5
         fig.update_yaxes(title_text=title_y, row=r, col=c, title_standoff = s_off)
-    fig.update_layout(width=800, height=450,margin=dict(l=20,r=20,b=20,t=20))
+    fig.update_layout(width=700, height=450,margin=dict(l=20,r=20,b=20,t=20))
     return fig

@@ -168,7 +168,8 @@ def plot_multiple_sim(n, N_IC, T_f, y_star, t, graph):
         s_off = 0 if(i<n) else 5
         fig.update_yaxes(title_text=title_y, row=r, col=c, title_standoff = s_off)
 
-    fig.update_layout(width=700, height=450,margin=dict(l=20,r=20,b=20,t=20))
+    width, height = 240*cols, 225*rows
+    fig.update_layout(width=width, height=height,margin=dict(l=20,r=20,b=20,t=20))
 
     return fig
 
@@ -207,5 +208,8 @@ def plot_multiple_sim_delta(n, N_IC, T_f, y_star, t, graph1, graph2):
         title_y = r"$x_{i}$".format(i=i+1) if(i<n) else r"$s$"
         s_off = 0 if(i<n) else 5
         fig.update_yaxes(title_text=title_y, row=r, col=c, title_standoff = s_off)
-    fig.update_layout(width=700, height=450,margin=dict(l=20,r=20,b=20,t=20))
+    
+    width, height = 240*cols, 225*rows
+    fig.update_layout(width=width, height=height,margin=dict(l=20,r=20,b=20,t=20))
+
     return fig
